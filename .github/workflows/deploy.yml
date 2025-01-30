@@ -3,7 +3,7 @@ name: Deploy Spring Boot Gradle App to EC2
 on:
   push:
     branches:
-      - main
+      - test-ssh-connection
 
 jobs:
   deploy:
