@@ -66,6 +66,10 @@ dependencies {
     implementation 'io.awspring.cloud:spring-cloud-starter-aws-secrets-manager-config:2.3.0'
 }
 
+tasks.withType(JavaExec).configureEach {
+    mainClass = 'com.example.codewavebe.CodeWaveBeApplication'
+}
+
 tasks.named('test') {
     useJUnitPlatform()
 }
