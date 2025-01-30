@@ -1,60 +1,35 @@
-name: Deploy Spring Boot Gradle App to EC2
+name: Deploy to AWS ECS
 
 on:
   push:
     branches:
-      - main  # main 브랜치에 푸시될 때 실행
+      - main
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout repository
+      - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Setup SSH Key
+      - name: Set up AWS CLI
         run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.EC2_SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H 13.216.143.130 >> ~/.ssh/known_hosts
+          sudo apt update
+          sudo apt install -y awscli
 
-      - name: Deploy to EC2
+      - name: Login to Amazon ECR
         run: |
-          ssh -i ~/.ssh/id_rsa ubuntu@13.216.143.130 << 'EOF'
-            set -e  # 스크립트 실행 중 오류 발생 시 중단
+          aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 888577058571.dkr.ecr.us-east-1.amazonaws.com/web-ide-backend
 
-            # 🔹 1. Java 17 설치 및 환경 변수 설정
-            sudo apt update -y
-            sudo apt install -y openjdk-17-jdk
-            echo "export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64" >> ~/.bashrc
-            echo "export PATH=\$JAVA_HOME/bin:\$PATH" >> ~/.bashrc
-            source ~/.bashrc
+      - name: Build Docker Image
+        run: |
+          docker build -t web-ide-backend .
+          docker tag web-ide-backend:latest 888577058571.dkr.ecr.us-east-1.amazonaws.com/web-ide-backend:latest
 
-            # 🔹 2. 작업 디렉토리 이동 (없으면 클론)
-            if [ ! -d "/home/ubuntu/code-wave-BE" ]; then
-              git clone https://github.com/code-wave-project/code-wave-BE.git /home/ubuntu/code-wave-BE
-            fi
-            cd /home/ubuntu/code-wave-BE
+      - name: Push Docker Image to Amazon ECR
+        run: |
+          docker push 888577058571.dkr.ecr.us-east-1.amazonaws.com/web-ide-backend:latest
 
-            # 🔹 3. 최신 코드 가져오기
-            git reset --hard
-            git pull origin main
-
-            # 🔹 4. Gradle 빌드 실행
-            ./gradlew build -x test
-
-            # 🔹 5. 실행 중인 애플리케이션 종료 (8080 포트 사용 중이면 강제 종료)
-            PID=$(sudo lsof -t -i:8080 || true)
-            if [ ! -z "$PID" ]; then
-              echo "🛑 기존 애플리케이션 종료 (PID: $PID)"
-              sudo kill -9 $PID
-            fi
-
-            # 🔹 6. Spring Boot 애플리케이션 실행
-            echo "🚀 Spring Boot 애플리케이션 실행 중..."
-            nohup java -jar build/libs/*.jar > app.log 2>&1 &
-
-            echo "✅ 배포 완료!"
-          EOF
+      - name: Update ECS Service
+        run: |
+          aws ecs update-service --cluster web-ide-ecs --service web-ide-service --force-new-deployment
