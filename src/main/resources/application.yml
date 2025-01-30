@@ -9,6 +9,10 @@ spring:
     password: 1111
   thymeleaf:
     cache: false
+  cloud:
+    aws:
+      secretsmanager:
+        enabled: false
 
   jpa:
     database-platform: org.hibernate.dialect.MySQL8Dialect  # MySQL8Dialect로 변경
