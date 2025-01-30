@@ -3,7 +3,7 @@ name: Deploy Spring Boot Gradle App to EC2
 on:
   push:
     branches:
-      - main
+      - main  # main 브랜치에 푸시될 때 실행
 
 jobs:
   deploy:
@@ -25,27 +25,34 @@ jobs:
           ssh -i ~/.ssh/id_rsa ubuntu@13.216.143.130 << 'EOF'
             set -e  # 스크립트 실행 중 오류 발생 시 중단
 
-            # 🔹 1. 작업 디렉토리 이동 (없으면 클론)
+            # 🔹 1. Java 17 설치 및 환경 변수 설정
+            sudo apt update -y
+            sudo apt install -y openjdk-17-jdk
+            echo "export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64" >> ~/.bashrc
+            echo "export PATH=\$JAVA_HOME/bin:\$PATH" >> ~/.bashrc
+            source ~/.bashrc
+
+            # 🔹 2. 작업 디렉토리 이동 (없으면 클론)
             if [ ! -d "/home/ubuntu/code-wave-BE" ]; then
               git clone https://github.com/code-wave-project/code-wave-BE.git /home/ubuntu/code-wave-BE
             fi
             cd /home/ubuntu/code-wave-BE
 
-            # 🔹 2. 최신 코드 가져오기
+            # 🔹 3. 최신 코드 가져오기
             git reset --hard
             git pull origin main
 
-            # 🔹 3. Gradle 빌드 실행
+            # 🔹 4. Gradle 빌드 실행
             ./gradlew build -x test
 
-            # 🔹 4. 실행 중인 애플리케이션 종료 (8080 포트 사용 중이면 강제 종료)
+            # 🔹 5. 실행 중인 애플리케이션 종료 (8080 포트 사용 중이면 강제 종료)
             PID=$(sudo lsof -t -i:8080 || true)
             if [ ! -z "$PID" ]; then
               echo "🛑 기존 애플리케이션 종료 (PID: $PID)"
               sudo kill -9 $PID
             fi
 
-            # 🔹 5. Spring Boot 애플리케이션 실행
+            # 🔹 6. Spring Boot 애플리케이션 실행
             echo "🚀 Spring Boot 애플리케이션 실행 중..."
             nohup java -jar build/libs/*.jar > app.log 2>&1 &
 
