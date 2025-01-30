@@ -41,4 +41,4 @@ jobs:
 
       - name: Update ECS Service
         run: |
-          aws ecs update-service --cluster web-ide-ecs --service web-ide-service --force-new-deployment
+          aws ecs update-service --cluster web-ide-ecs --service web-ide-service-public-1 --force-new-deployment
