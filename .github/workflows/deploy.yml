@@ -27,7 +27,7 @@ jobs:
 
             # 🔹 1. 작업 디렉토리 이동 (없으면 클론)
             if [ ! -d "/home/ubuntu/code-wave-BE" ]; then
-              git clone https://github.com/내-깃허브-아이디/code-wave-BE.git /home/ubuntu/code-wave-BE
+              git clone https://github.com/code-wave-project/code-wave-BE.git /home/ubuntu/code-wave-BE
             fi
             cd /home/ubuntu/code-wave-BE
 
