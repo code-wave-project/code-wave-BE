@@ -60,9 +60,6 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-
-    // AWS Secrets Manager (환경 변수 관리)
-    implementation 'io.awspring.cloud:spring-cloud-starter-aws-secrets-manager-config:2.3.0'
 }
 
 application {
