@@ -1,12 +1,9 @@
-FROM gradle:8.2.1-jdk17 AS build
-WORKDIR /app
-COPY . .
+FROM openjdk:17
 
-ENV GRADLE_USER_HOME /app/.gradle
-RUN chmod +x gradlew
-RUN ./gradlew build -x test
+ARG JAR_FILE=build/libs/*.jar
 
-FROM eclipse-temurin:17-jre
-WORKDIR /app
-COPY --from=build /app/build/libs/*.jar app.jar
-ENTRYPOINT ["java", "-jar", "app.jar"]
+COPY ${JAR_FILE} app.jar
+
+EXPOSE 8080
+
+ENTRYPOINT ["java", "-jar", "/app.jar"]

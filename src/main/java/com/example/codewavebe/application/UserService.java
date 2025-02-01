@@ -22,9 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
 
     private final UserRepository userRepository;
-//    private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final EmailClient emailService;
-//    private final AuthenticationManager authenticationManager;
     private final JWTUtil jwtUtil;
 
     @Transactional
