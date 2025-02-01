@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RequiredArgsConstructor
 @RestControllerAdvice
-@io.swagger.v3.oas.annotations.Hidden
+@io.swagger.v3.oas.annotations.Hidden//
 public class GlobalExceptionHandler {
 
     /**
