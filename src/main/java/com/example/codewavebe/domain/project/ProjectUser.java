@@ -10,42 +10,35 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import java.util.UUID;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Project extends BaseEntity {
+public class ProjectUser extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", updatable = false)
     private Long id;
 
-    private String title;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "project_id")
+    private Project project;
 
-    private String description;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id")
+    private User user;
 
-    private String Initiator;
+    private boolean isOwner; // 프로젝트 개설자 여
 
-    private String inviteCode;
-
-    public Project(String title, String description, User user) {
-        this.title = title;
-        this.description = description;
-        Initiator = user.getUsername();
-        this.inviteCode = UUID.randomUUID().toString();
-    }
-
-    public static Project of(String title, String description, User user) {
-        return new Project(title, description, user);
-    }
-
-    public void updateProject(String title, String description) {
-        this.title = title;
-        this.description = description;
+    @Builder
+    public ProjectUser(Project project, User user, boolean isOwner) {
+        this.project = project;
+        this.user = user;
+        this.isOwner = isOwner;
     }
 }

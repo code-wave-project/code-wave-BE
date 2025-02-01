@@ -83,7 +83,8 @@ public class ProjectController {
         }
 
         String email = jwtUtil.extractId(jwt);
-        return ResponseEntity.ok(ApiResponse.success(projectService.editProject(email, createProjectRequest, projectId)));
+        return ResponseEntity.ok(
+                ApiResponse.success(projectService.editProject(email, createProjectRequest, projectId)));
     }
 
     @Operation(summary = "전체 프로젝트 조회", description = "접근 권한이 있는 전체 프로젝트를 조회합니다.")
@@ -121,5 +122,25 @@ public class ProjectController {
 
         String email = jwtUtil.extractId(jwt);
         return ResponseEntity.ok(ApiResponse.success(projectService.deleteProject(email, projectId)));
+    }
+
+    @Operation(summary = "프로젝트 참여(초대코드 입력)", description = "초대 코드 입력을 통해 선택한 프로젝트에 참여합니다.")
+    @PostMapping("/join/{projectId}/{inviteCode}")
+    public ResponseEntity<ApiResponse<Message>> joinProject(
+            @RequestHeader("Authorization") String token,
+            @PathVariable Long projectId,
+            @PathVariable String inviteCode
+    ) {
+        if (token == null) {
+            throw new IllegalArgumentException("token is null");
+        }
+
+        String jwt = token.startsWith("Bearer ") ? token.substring(7) : token;
+        if (!jwtUtil.validateToken(jwt)) {
+            throw new IllegalArgumentException("Invalid token");
+        }
+
+        String email = jwtUtil.extractId(jwt);
+        return ResponseEntity.ok(ApiResponse.success(projectService.joinProject(email, projectId, inviteCode)));
     }
 }
