@@ -20,7 +20,7 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 public class WebSocketChatHandler extends TextWebSocketHandler {
     private final ObjectMapper mapper;
 
-    // 소켓 세션을 저장할 Set
+    // 소켓 세션을 저장할 Set.
     private final Set<WebSocketSession> sessions = new HashSet<>();
 
     // 채팅방 id와 소켓 세션을 저장할 Map
