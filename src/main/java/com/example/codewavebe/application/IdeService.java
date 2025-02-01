@@ -4,11 +4,10 @@ import com.example.codewavebe.adapter.in.dto.IdeRequestDto;
 import com.example.codewavebe.adapter.in.dto.IdeResponseDto;
 import com.example.codewavebe.adapter.out.persistence.repository.IdeRepository;
 import com.example.codewavebe.adapter.out.persistence.repository.UserRepository;
+import com.example.codewavebe.common.dto.api.Message;
 import com.example.codewavebe.domain.ide.Ide;
 import com.example.codewavebe.domain.user.User;
 import jakarta.persistence.EntityNotFoundException;
-import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,8 +21,8 @@ public class IdeService {
     private final UserRepository userRepository;
 
     @Transactional
-    public IdeResponseDto saveCode(Long userId, IdeRequestDto requestDto) {
-        User user = userRepository.findById(userId)
+    public IdeResponseDto saveCode(String email, IdeRequestDto requestDto) {
+        User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
 
         Ide ide = new Ide(user, requestDto.getCode());
@@ -37,19 +36,12 @@ public class IdeService {
         return IdeResponseDto.from(ide);
     }
 
-    public List<IdeResponseDto> getUserCodes(Long userId) {
-        List<Ide> ideList = ideRepository.findByUserId(userId);
-        return ideList.stream()
-                .map(IdeResponseDto::from)
-                .collect(Collectors.toList());
-    }
-
     @Transactional
-    public IdeResponseDto updateCode(Long id, IdeRequestDto requestDto) {
+    public Message updateCode(Long id, IdeRequestDto requestDto) {
         Ide ide = ideRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Code not found"));
         ide.updateCode(requestDto.getCode());
-        return IdeResponseDto.from(ide);
+        return Message.builder().message("해당 소스코드를 수정했습니다.").build();
     }
 
     @Transactional

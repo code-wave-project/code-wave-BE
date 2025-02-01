@@ -5,6 +5,8 @@ import com.example.codewavebe.adapter.in.dto.IdeResponseDto;
 import com.example.codewavebe.application.IdeService;
 import com.example.codewavebe.common.dto.api.ApiResponse;
 import com.example.codewavebe.common.dto.api.Message;
+import com.example.codewavebe.util.helper.JWTUtil;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -26,40 +29,46 @@ import org.springframework.web.bind.annotation.RestController;
 public class IdeController {
 
     private final IdeService ideService;
+    private final JWTUtil jwtUtil;
 
-    @PostMapping("/{userId}")
+    @Operation(summary = "코드 저장", description = "작성한 코드를 저장합니다.")
+    @PostMapping
     public ResponseEntity<ApiResponse<IdeResponseDto>> saveCode(
-            @PathVariable Long userId,
+            @RequestHeader("Authorization") String token,
             @RequestBody IdeRequestDto requestDto
     ) {
-        return ResponseEntity.ok(ApiResponse.success(ideService.saveCode(userId, requestDto)));
+        if (token == null) {
+            throw new IllegalArgumentException("token is null");
+        }
+
+        String jwt = token.startsWith("Bearer ") ? token.substring(7) : token;
+        if (!jwtUtil.validateToken(jwt)) {
+            throw new IllegalArgumentException("Invalid token");
+        }
+
+        String email = jwtUtil.extractId(jwt);
+        return ResponseEntity.ok(ApiResponse.success(ideService.saveCode(email, requestDto)));
     }
 
-    // 특정 코드 조회
-    @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<IdeResponseDto>> getCode(@PathVariable Long id) {
-        return ResponseEntity.ok(ApiResponse.success(ideService.getCode(id)));
+    @Operation(summary = "특정 소스코드 조회", description = "특정 소스코드를 조회합니다.")
+    @GetMapping("/{ideId}")
+    public ResponseEntity<ApiResponse<IdeResponseDto>> getCode(@PathVariable Long ideId) {
+        return ResponseEntity.ok(ApiResponse.success(ideService.getCode(ideId)));
     }
 
-    // 사용자의 모든 코드 조회
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<ApiResponse<List<IdeResponseDto>>> getUserCodes(@PathVariable Long userId) {
-        return ResponseEntity.ok(ApiResponse.success(ideService.getUserCodes(userId)));
-    }
-
-    // 코드 수정
-    @PatchMapping("/{id}")
-    public ResponseEntity<ApiResponse<IdeResponseDto>> updateCode(
-            @PathVariable Long id,
+    @Operation(summary = "특정 소스코드 수정", description = "특정 소스코드를 수정합니다.")
+    @PatchMapping("/{ideId}")
+    public ResponseEntity<ApiResponse<Message>> updateCode(
+            @PathVariable Long ideId,
             @RequestBody IdeRequestDto requestDto
     ) {
-        return ResponseEntity.ok(ApiResponse.success(ideService.updateCode(id, requestDto)));
+        return ResponseEntity.ok(ApiResponse.success(ideService.updateCode(ideId, requestDto)));
     }
 
-    // 코드 삭제
-    @DeleteMapping("/{id}")
-    public ResponseEntity<ApiResponse<Message>> deleteCode(@PathVariable Long id) {
-        ideService.deleteCode(id);
+    @Operation(summary = "특정 소스코드 삭제", description = "특정 소스코드 데이터를 삭제합니다.")
+    @DeleteMapping("/{ideId}")
+    public ResponseEntity<ApiResponse<Message>> deleteCode(@PathVariable Long ideId) {
+        ideService.deleteCode(ideId);
         return ResponseEntity.ok(ApiResponse.success(Message.builder().message("삭제가 완료되었습니다.").build()));
     }
 }
