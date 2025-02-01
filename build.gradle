@@ -27,7 +27,7 @@ repositories {
 dependencies {
     // Spring Boot 필수 의존성
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'org.springframework.boot:spring-boot-starter-security'
+//    implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-websocket'
 
@@ -37,6 +37,7 @@ dependencies {
     // MySQL 데이터베이스
     runtimeOnly 'com.mysql:mysql-connector-j:8.2.0'
 
+
     // Lombok
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
@@ -44,10 +45,14 @@ dependencies {
     // Validation
     implementation 'org.springframework.boot:spring-boot-starter-validation'
 
-    // JWT 인증
-    implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
-    implementation 'io.jsonwebtoken:jjwt-impl:0.11.5'
-    implementation 'io.jsonwebtoken:jjwt-jackson:0.11.5'
+    //jwt
+    implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.12.3'
+    runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.12.3'
+    runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.12.3'
+
+    //jwk
+    implementation 'com.auth0:java-jwt:3.18.2'
+    implementation 'com.auth0:jwks-rsa:0.20.0'
 
     // 메일 발송
     implementation 'org.springframework.boot:spring-boot-starter-mail'
@@ -58,7 +63,7 @@ dependencies {
     // 개발 및 테스트 관련 도구
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation 'org.springframework.security:spring-security-test'
+//    testImplementation 'org.springframework.security:spring-security-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 

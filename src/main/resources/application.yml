@@ -4,9 +4,9 @@ server:
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/db_codingrecipe?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
-    username: user_codingrecipe
-    password: 1111
+    url: jdbc:mysql://web-ide-rds.c3aeygqk6msc.us-east-1.rds.amazonaws.com:3306/codewave?serverTimezone=Asia/Seoul
+    username: admin
+    password: Codewave0130!
   thymeleaf:
     cache: false
 
@@ -15,19 +15,25 @@ spring:
     open-in-view: false
     show-sql: true
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
 
   mail:
-    host: email-smtp.us-east-1.amazonaws.com
+    host: smtp.gmail.com
     port: 587
-    username: AKIA3TD31SHQ4LUVZQEVL          # Access Key ID
-    password: a8KzDAWQ6M5Il766832S2BTsLzt6D/gI03A+pIbH # Secret Access Key
+    username: hazardous0212@gmail.com
+    password: xuia jmka shqj kxnr
     properties:
       mail:
         smtp:
           auth: true
+          timeout: 5000
           starttls:
             enable: true
+app:
+  auth:
+    token-secret: ABCDSADSDADABCDSADSDADABCDSADSDADABCDSADSDADABCDSADSDADABCDSADSDAD
+  cors:
+    allowed-origins: http://localhost:3000, http://localhost:8080
 
 springdoc:
   api-docs:
