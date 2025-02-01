@@ -1,7 +1,6 @@
-package com.example.codewavebe.domain.ide;
+package com.example.codewavebe.domain.project;
 
 import com.example.codewavebe.common.BaseEntity;
-import com.example.codewavebe.domain.project.Project;
 import com.example.codewavebe.domain.user.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -11,6 +10,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import java.util.UUID;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,29 +18,39 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Ide extends BaseEntity {
+public class Project extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", updatable = false)
     private Long id;
 
-    private String code;
+    private String title;
+
+    private String description;
+
+    private String Initiator;
+
+    private String inviteCode;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "project_id")
-    private Project project;
-
-    public Ide(User user, String code) {
+    public Project(String title, String description, User user) {
+        this.title = title;
+        this.description = description;
+        Initiator = user.getUsername();
+        this.inviteCode = UUID.randomUUID().toString();
         this.user = user;
-        this.code = code;
     }
 
-    public void updateCode(String newCode) {
-        this.code = newCode;
+    public static Project of(String title, String description, User user) {
+        return new Project(title, description, user);
+    }
+
+    public void updateProject(String title, String description) {
+        this.title = title;
+        this.description = description;
     }
 }

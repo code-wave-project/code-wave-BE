@@ -5,22 +5,24 @@ import com.example.codewavebe.adapter.in.dto.IdeResponseDto;
 import com.example.codewavebe.application.IdeService;
 import com.example.codewavebe.common.dto.api.ApiResponse;
 import com.example.codewavebe.common.dto.api.Message;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-@Service
-@Transactional(readOnly = true)
+@Tag(name = "Ide", description = "IDE API")
 @RequiredArgsConstructor
+@RestController
+@RequestMapping("/ide")
 public class IdeController {
 
     private final IdeService ideService;
