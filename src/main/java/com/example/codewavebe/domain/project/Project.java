@@ -37,7 +37,7 @@ public class Project extends BaseEntity {
 
     private String inviteCode;
 
-    @OneToMany(mappedBy = "project", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "project", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<ProjectUser> projectUsers = new ArrayList<>();
 
     public Project(String title, String description, User user) {

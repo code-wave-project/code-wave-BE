@@ -7,4 +7,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class IdeRequestDto {
     private String code;
+    private String path;
 }

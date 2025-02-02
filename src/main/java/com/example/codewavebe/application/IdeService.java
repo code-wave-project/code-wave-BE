@@ -25,7 +25,7 @@ public class IdeService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
 
-        Ide ide = new Ide(user, requestDto.getCode());
+        Ide ide = new Ide(user, requestDto.getCode(), requestDto.getPath());
         Ide savedIde = ideRepository.save(ide);
         return IdeResponseDto.from(savedIde);
     }

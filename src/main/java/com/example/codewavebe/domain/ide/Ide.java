@@ -27,6 +27,8 @@ public class Ide extends BaseEntity {
 
     private String code;
 
+    private String path;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private User user;
@@ -35,9 +37,10 @@ public class Ide extends BaseEntity {
     @JoinColumn(name = "project_id")
     private Project project;
 
-    public Ide(User user, String code) {
+    public Ide(User user, String code, String path) {
         this.user = user;
         this.code = code;
+        this.path = path;
     }
 
     public void updateCode(String newCode) {
