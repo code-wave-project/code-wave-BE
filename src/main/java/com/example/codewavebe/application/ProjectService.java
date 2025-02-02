@@ -116,8 +116,8 @@ public class ProjectService {
     }
 
     @Transactional
-    public Message joinProject(String email, Long projectId, String inviteCode) {
-        Project project = projectRepository.findById(projectId)
+    public Message joinProject(String email, String inviteCode) {
+        Project project = projectRepository.findByInviteCode(inviteCode)
                 .orElseThrow(() -> new RuntimeException("Project not found"));
 
         if (!project.getInviteCode().equals(inviteCode)) {

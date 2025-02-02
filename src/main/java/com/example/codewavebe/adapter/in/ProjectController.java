@@ -125,10 +125,9 @@ public class ProjectController {
     }
 
     @Operation(summary = "프로젝트 참여(초대코드 입력)", description = "초대 코드 입력을 통해 선택한 프로젝트에 참여합니다.")
-    @PostMapping("/join/{projectId}/{inviteCode}")
+    @PostMapping("/join/{inviteCode}")
     public ResponseEntity<ApiResponse<Message>> joinProject(
             @RequestHeader("Authorization") String token,
-            @PathVariable Long projectId,
             @PathVariable String inviteCode
     ) {
         if (token == null) {
@@ -141,6 +140,6 @@ public class ProjectController {
         }
 
         String email = jwtUtil.extractId(jwt);
-        return ResponseEntity.ok(ApiResponse.success(projectService.joinProject(email, projectId, inviteCode)));
+        return ResponseEntity.ok(ApiResponse.success(projectService.joinProject(email, inviteCode)));
     }
 }

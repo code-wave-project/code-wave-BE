@@ -21,4 +21,6 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
             "JOIN ProjectUser pu ON p = pu.project " +
             "WHERE pu.user.email = :email")
     List<Project> findAllProjectsByUserEmail(String email);
+
+    Optional<Project> findByInviteCode(String inviteCode);
 }
