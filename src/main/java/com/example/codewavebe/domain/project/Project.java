@@ -2,6 +2,7 @@ package com.example.codewavebe.domain.project;
 
 import com.example.codewavebe.common.BaseEntity;
 import com.example.codewavebe.domain.user.User;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -10,6 +11,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -32,6 +36,9 @@ public class Project extends BaseEntity {
     private String Initiator;
 
     private String inviteCode;
+
+    @OneToMany(mappedBy = "project", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<ProjectUser> projectUsers = new ArrayList<>();
 
     public Project(String title, String description, User user) {
         this.title = title;

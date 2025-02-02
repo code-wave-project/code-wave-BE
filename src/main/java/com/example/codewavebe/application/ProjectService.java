@@ -1,7 +1,6 @@
 package com.example.codewavebe.application;
 
 import com.example.codewavebe.adapter.in.dto.CreateProjectRequest;
-import com.example.codewavebe.adapter.in.dto.GetAllProjects;
 import com.example.codewavebe.adapter.in.dto.GetAllProjectsResponse;
 import com.example.codewavebe.adapter.in.dto.GetProjectResponse;
 import com.example.codewavebe.adapter.in.dto.ProjectWithUsersDto;
@@ -92,7 +91,8 @@ public class ProjectService {
                     project.getDescription(),
                     project.getInitiator(), // 엔티티의 필드명이 "Initiator"라면 그대로 사용
                     project.getInviteCode(),
-                    userDtos
+                    userDtos,
+                    project.getCreatedAt()
             );
         }).collect(Collectors.toList());
 
@@ -108,6 +108,7 @@ public class ProjectService {
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new RuntimeException("Project not found"));
 
+        projectUserRepository.deleteByProjectId(projectId);
         projectRepository.delete(project);
         return Message.builder().message(projectId.toString() + "번 프로젝트를 삭제했습니다.").build();
     }

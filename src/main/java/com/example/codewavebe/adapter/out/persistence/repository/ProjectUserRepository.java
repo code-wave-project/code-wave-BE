@@ -5,6 +5,7 @@ import com.example.codewavebe.domain.project.ProjectUser;
 import com.example.codewavebe.domain.user.User;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -29,4 +30,8 @@ public interface ProjectUserRepository extends JpaRepository<ProjectUser, Long> 
             "FROM ProjectUser pu " +
             "WHERE pu.project.id = :projectId")
     List<User> findUsersByProjectId(@Param("projectId") Long projectId);
+
+    @Modifying
+    @Query("DELETE FROM ProjectUser pu WHERE pu.project.id = :projectId")
+    void deleteByProjectId(@Param("projectId") Long projectId);
 }
