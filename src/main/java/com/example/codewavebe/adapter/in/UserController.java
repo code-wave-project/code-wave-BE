@@ -59,7 +59,6 @@ public class UserController {
         }
 
         String jwt = token.startsWith("Bearer ") ? token.substring(7) : token;
-        System.out.println("jwt = " + jwt);
         if (!jwtUtil.validateToken(jwt)) {
             throw new IllegalArgumentException("Invalid token");
         }
