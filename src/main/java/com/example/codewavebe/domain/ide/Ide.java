@@ -25,6 +25,10 @@ public class Ide extends BaseEntity {
     @Column(name = "id", updatable = false)
     private Long id;
 
+    private String parent;
+
+    private String name;
+
     private String code;
 
     private String path;
@@ -37,10 +41,12 @@ public class Ide extends BaseEntity {
     @JoinColumn(name = "project_id")
     private Project project;
 
-    public Ide(User user, String code, String path) {
+    public Ide(User user, String code, String path, String parent, String name) {
         this.user = user;
         this.code = code;
         this.path = path;
+        this.parent = parent;
+        this.name = name;
     }
 
     public void updateCode(String newCode) {

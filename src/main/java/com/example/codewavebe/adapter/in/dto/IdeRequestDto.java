@@ -8,4 +8,6 @@ import lombok.NoArgsConstructor;
 public class IdeRequestDto {
     private String code;
     private String path;
+    private String name;
+    private String parent;
 }
