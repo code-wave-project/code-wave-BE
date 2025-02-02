@@ -8,6 +8,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Component
@@ -17,6 +18,7 @@ public class EmailClient {
     private final JavaMailSender javaMailSender;
     private final JavaMailSenderImpl mailSender;
 
+    @Transactional // 트랜잭션 격리 - 롤백용
     public void sendOneEmail(String from, String to, String joinCode) {
         try {
             MimeMessage mimeMessage = mailSender.createMimeMessage();

@@ -1,6 +1,7 @@
 package com.example.codewavebe.adapter.in;
 
 import com.example.codewavebe.adapter.in.dto.ForgotPasswordRequest;
+import com.example.codewavebe.adapter.in.dto.MyInfoResponse;
 import com.example.codewavebe.adapter.in.dto.ResetPasswordRequest;
 import com.example.codewavebe.adapter.in.dto.SignInRequest;
 import com.example.codewavebe.adapter.in.dto.SignInResponse;
@@ -13,6 +14,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -64,5 +66,24 @@ public class UserController {
         String email = jwtUtil.extractId(jwt);
         System.out.println("userId = " + email);
         return ResponseEntity.ok(ApiResponse.success(userService.resetPassword(email, request)));
+    }
+
+    @Operation(summary = "내 정보 조회", description = "토큰으로 내 정보를 조회합니다.")
+    @GetMapping("/myInfo")
+    public ResponseEntity<ApiResponse<MyInfoResponse>> whoAmI(
+            @RequestHeader("Authorization") String token
+    ) {
+        if (token == null) {
+            throw new IllegalArgumentException("token is null");
+        }
+
+        String jwt = token.startsWith("Bearer ") ? token.substring(7) : token;
+        System.out.println("jwt = " + jwt);
+        if (!jwtUtil.validateToken(jwt)) {
+            throw new IllegalArgumentException("Invalid token");
+        }
+        String email = jwtUtil.extractId(jwt);
+        System.out.println("userId = " + email);
+        return ResponseEntity.ok(ApiResponse.success(userService.whoAmI(email)));
     }
 }

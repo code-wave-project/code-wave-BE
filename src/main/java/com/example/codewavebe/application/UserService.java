@@ -1,5 +1,6 @@
 package com.example.codewavebe.application;
 
+import com.example.codewavebe.adapter.in.dto.MyInfoResponse;
 import com.example.codewavebe.adapter.in.dto.ResetPasswordRequest;
 import com.example.codewavebe.adapter.in.dto.SignInRequest;
 import com.example.codewavebe.adapter.in.dto.SignInResponse;
@@ -122,4 +123,11 @@ public class UserService {
         return Message.builder().message("비밀번호가 성공적으로 변경되었습니다.").build();
     }
 
+    public MyInfoResponse whoAmI(String email) {
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        return MyInfoResponse.of(user);
+    }
 }

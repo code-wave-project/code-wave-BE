@@ -15,4 +15,10 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
 
     @Query("SELECT p FROM Project p LEFT JOIN ProjectUser pu ON p.id = pu.project.id WHERE pu.user = :user")
     Optional<List<Project>> findAllByUser(User user);
+
+    @Query("SELECT DISTINCT p " +
+            "FROM Project p " +
+            "JOIN ProjectUser pu ON p = pu.project " +
+            "WHERE pu.user.email = :email")
+    List<Project> findAllProjectsByUserEmail(String email);
 }
