@@ -13,6 +13,7 @@ import com.example.codewavebe.domain.ide.Ide;
 import com.example.codewavebe.domain.project.Project;
 import com.example.codewavebe.domain.project.ProjectUser;
 import com.example.codewavebe.domain.user.User;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -75,7 +76,7 @@ public class ProjectService {
 
         List<Project> projects = projectUserRepository.findProjectsByUserEmail(email);
         if (projects.isEmpty()) {
-            throw new RuntimeException("No projects found for user");
+            return new GetAllProjectsResponse(Collections.emptyList());
         }
 
         // 각 프로젝트별로 소속된 사용자 목록 조회 및 DTO 매핑
@@ -92,7 +93,8 @@ public class ProjectService {
                     project.getInitiator(), // 엔티티의 필드명이 "Initiator"라면 그대로 사용
                     project.getInviteCode(),
                     userDtos,
-                    project.getCreatedAt()
+                    project.getCreatedAt(),
+                    project.getUpdatedAt()
             );
         }).collect(Collectors.toList());
 

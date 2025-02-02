@@ -10,7 +10,8 @@ public record ProjectWithUsersDto(
         String initiator,
         String inviteCode,
         List<UserDto> users,
-        LocalDateTime createdAt
+        LocalDateTime createdAt,
+        LocalDateTime updatedAt
 ) {
     public record UserDto(
             Long id,
