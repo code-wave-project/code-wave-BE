@@ -40,8 +40,8 @@ public class User extends BaseEntity {
         this.role = Role.USER;
     }
 
-    public static User of(String email, String username, String password) {
-        return new User(email, username, password);
+    public static User of(String email, String password, String username) {
+        return new User(email, password, username);
     }
 
     public void updatePassword(String password) {
